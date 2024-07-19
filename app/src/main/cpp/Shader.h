@@ -28,4 +28,4 @@ public:
 };
 
 
-#endif //OPENGLSTUDYDEMO_SHADER_H
+#endif //LEARNMEDIA_SHADER_H

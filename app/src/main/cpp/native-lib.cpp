@@ -8,7 +8,9 @@
 #include <android/bitmap.h>
 #include <unistd.h>
 #include "FragmentShader.h"
+#include "Shader.h"
 #include <vector>
+
 
 #define LOGD(...) __android_log_print(ANDROID_LOG_WARN,"learnMedia",__VA_ARGS__)
 
@@ -24,8 +26,6 @@ Java_com_learnmedia_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz) {
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_learnmedia_GlPlayer_drawTriangle(JNIEnv *env, jobject thiz, jobject surface) {
-    /**        此处开始EGL的配置              **/
-
     //1. 获取原始窗口
     ANativeWindow *nwin = ANativeWindow_fromSurface(env, surface);
 
@@ -90,62 +90,34 @@ Java_com_learnmedia_GlPlayer_drawTriangle(JNIEnv *env, jobject thiz, jobject sur
         return;
     }
 
-    /**        此处结束EGL的配置              **/
-
-    /**        此处开始加载着色器程序               **/
-    GLint vsh = initShader(vertexSimpleShape, GL_VERTEX_SHADER);
-    GLint fsh = initShader(fragSimpleShape, GL_FRAGMENT_SHADER);
+    ///  此处开始加载着色器程序
+    Shader shader(vertexSimpleShape, fragSimpleShape);
+    shader.use();
 
 
-    GLint program = glCreateProgram();
-    if (program == 0) {
-        LOGD("glCreateProgram failed");
-        return;
-    }
 
-
-    glAttachShader(program, vsh);
-    glAttachShader(program, fsh);
-
-
-    glLinkProgram(program);
-    GLint status = 0;
-    glGetProgramiv(program, GL_LINK_STATUS, &status);
-    if (status == 0) {
-        LOGD("glLinkProgram failed");
-        return;
-    }
-    LOGD("glLinkProgram success");
-
-    glUseProgram(program);
-
-    /**        此处加载着色器程序结束              **/
-
-
-    /**        此处开始将数据传入图形渲染管线              **/
+    /// 开始将数据传入图形渲染管线
     static float triangleVer[] = {
             0.8f, -0.8f, 0.0f,
             -0.8f, -0.8f, 0.0f,
             0.0f, 0.8f, 0.0f,
     };
-   //顶点坐标传到变量“aPosition”中，所以先指定接收的变量名
-    GLuint apos = static_cast<GLuint>(glGetAttribLocation(program, "aPosition"));
-    glEnableVertexAttribArray(apos);
+    //顶点坐标传到变量“aPosition”中，所以先指定接收的变量名
+//    GLuint apos = static_cast<GLuint>(glGetAttribLocation(program, "aPosition"));//旧的传递方式
+    //通过layout传输数据，传给了着色器中layout为0的变量
     //stride：步长，一个重要概念，表示前一个顶点属性的起始位置到下一个顶点属性的起始位置在数组中有多少字节。如果传0，则说明顶点属性数据是紧密挨着的
-    glVertexAttribPointer(apos, 3, GL_FLOAT, GL_FALSE, 0, triangleVer);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, triangleVer);
+    //打开layout为0的变量传输开关
+    glEnableVertexAttribArray(0);
 
-    /**        此处结束将数据传入图形渲染管线              **/
 
-    /**        此处开始将图像渲染到屏幕              **/
-
+    ///开始将图像渲染到屏幕
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-
+    //绘制三个点
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
-
+    //窗口显示，交换双缓冲区
     eglSwapBuffers(display, winSurface);
-
-    /**        此处结束图像渲染              **/
 
 
 }

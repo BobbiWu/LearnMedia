@@ -1,8 +1,7 @@
 //
 // Created by insane on 2024/7/8.
 //
-#include <GLES3/gl3.h>
-#include "shader.h"
+#include "Shader.h"
 
 GLint Shader::initShader(const char *source, GLint type) {
     //创建shader
@@ -37,4 +36,36 @@ GLint Shader::initShader(const char *source, GLint type) {
 
     Shader_LOGD("glCompileShader %d success", type);
     return sh;
+}
+
+int Shader::use() {
+    GLint vsh = initShader(vertexShader, GL_VERTEX_SHADER);
+    GLint fsh = initShader(fragmentShader, GL_FRAGMENT_SHADER);
+
+    //创建渲染程序
+    program = glCreateProgram();
+    if (program == 0) {
+        Shader_LOGD("glCreateProgram failed");
+        return 0;
+    }
+
+    //向渲染程序中加入着色器
+    glAttachShader(program, vsh);
+    glAttachShader(program, fsh);
+
+    //链接程序
+    glLinkProgram(program);
+    GLint status = 0;
+    glGetProgramiv(program, GL_LINK_STATUS, &status);
+    if (status == 0) {
+        Shader_LOGD("glLinkProgram failed");
+        return 0;
+    }
+    Shader_LOGD("glLinkProgram success");
+
+    glDeleteShader(vsh);
+    glDeleteShader(fsh);
+    //激活渲染程序
+    glUseProgram(program);
+    return program;
 }

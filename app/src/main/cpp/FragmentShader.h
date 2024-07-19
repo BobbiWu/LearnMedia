@@ -25,4 +25,22 @@ static const char *vertexSimpleShape =
         "        }";
 
 
+//图元被光栅化为多少片段，就被调用多少次
+static const char *fragSimpleShape =
+        "  #version 300 es\n"
+        "        precision\n"
+        "        mediump float;\n"
+        "\n"
+        "        in\n"
+        "        vec4 vTextColor;//输入的颜色\n"
+        "        out vec4 FragColor;\n"
+
+        "        in\n"
+        "        vec4 vPosition;//输入的坐标\n"
+
+        "        void main() {\n"
+        "            //gl_FragColor是OpenGL内置的\n"
+        "            FragColor = vec4(vPosition.x ,vPosition.y ,vPosition.z,1.0);\n"
+        "        }";
+
 #endif //LEARNMEDIA_FRAGMENTSHADER_H
