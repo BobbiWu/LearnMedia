@@ -1,7 +1,7 @@
-//
-// Created by insane on 2024/7/8.
-//
+
+
 #include "Shader.h"
+
 
 GLint Shader::initShader(const char *source, GLint type) {
     //创建shader
@@ -69,3 +69,14 @@ int Shader::use() {
     glUseProgram(program);
     return program;
 }
+
+Shader::Shader(const char *vertexShader, const char *fragmentShader) {
+    this->vertexShader = vertexShader;
+    this->fragmentShader = fragmentShader;
+}
+
+void Shader::release() {
+    glDeleteProgram(program);
+}
+
+

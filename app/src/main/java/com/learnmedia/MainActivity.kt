@@ -14,9 +14,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.glPlayer.setVideoType()
 
-        // Example of a call to a native method
-        binding.sampleText.text = stringFromJNI()
     }
 
     /**

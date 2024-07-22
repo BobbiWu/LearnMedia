@@ -26,72 +26,65 @@ Java_com_learnmedia_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz) {
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_learnmedia_GlPlayer_drawTriangle(JNIEnv *env, jobject thiz, jobject surface) {
-    //1. 获取原始窗口
+//1.获取原始窗口
+    //be sure to use ANativeWindow_release()
+    // * when done with it so that it doesn't leak.
     ANativeWindow *nwin = ANativeWindow_fromSurface(env, surface);
-
-    //获取OpenGL es渲染目标Display，EGL_DEFAULT_DISPLAY表示默认的Display
+    //获取Display
     EGLDisplay display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-    if (display != EGL_NO_DISPLAY) {
+    if (display == EGL_NO_DISPLAY) {
         LOGD("egl display failed");
         return;
     }
-
-    //2.初始化egl Diaplay的连接，后两个参数是指针，是分别用来返回EGL主次版本号
-    EGLBoolean init = eglInitialize(display, 0, 0);
-    if (init != EGL_TRUE) {
+    //2.初始化egl，后两个参数为主次版本号
+    if (EGL_TRUE != eglInitialize(display, 0, 0)) {
         LOGD("eglInitialize failed");
         return;
     }
 
-    //返回的EGL帧缓存配置
+    //3.1 surface配置，可以理解为窗口
     EGLConfig eglConfig;
-    //配置数量
     EGLint configNum;
-
-    //期望的EGL帧缓存配置列表,配置为一个key一个value的形式，以下的EGL_RED_SIZE、EGL_GREEN_SIZE、EGL_BLUE_SIZE分别表示EGL帧缓冲中的颜色缓冲一个颜色通道用多少位表示。
-    //指定EGL surface类型
     EGLint configSpec[] = {
-            EGL_RED_SIZE, 8,
-            EGL_GREEN_SIZE, 8,
-            EGL_BLUE_SIZE, 8,
+            EGL_RED_SIZE, 4,
+            EGL_GREEN_SIZE, 4,
+            EGL_BLUE_SIZE, 4,
             EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
             EGL_NONE
     };
 
-    //返回一个和期望的EGL帧缓存配置列表configSpec匹配的EGL帧缓存配置列表，存储在eglConfig中
-    if (eglChooseConfig(display, configSpec, &eglConfig, 1, &configNum) != EGL_TRUE) {
+    if (EGL_TRUE != eglChooseConfig(display, configSpec, &eglConfig, 1, &configNum)) {
         LOGD("eglChooseConfig failed");
         return;
     }
 
-    //通过egl和NativeWindow以及EGL帧缓冲配置创建EGLSurface。最后一个参数为属性信息，0表示不需要属性)
+//    BITMAP_INFO_LOGD("eglChooseConfig eglConfig:" + eglConfig);
+
+    //3.2创建surface(egl和NativeWindow进行关联。最后一个参数为属性信息，0表示默认版本)
     EGLSurface winSurface = eglCreateWindowSurface(display, eglConfig, nwin, 0);
     if (winSurface == EGL_NO_SURFACE) {
         LOGD("eglCreateWindowSurface failed");
         return;
     }
 
-    //渲染上下文EGLContext关联的帧缓冲配置列表，EGL_CONTEXT_CLIENT_VERSION表示这里是配置EGLContext的版本，
-    const EGLint ctxSpec[] = {
-            EGL_CONTEXT_CLIENT_VERSION, 3,
-            EGL_NONE
+    //4 创建关联上下文
+    const EGLint ctxAttr[] = {
+            EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE
     };
-
-    //通过Display和上面获取到的的EGL帧缓存配置列表创建一个EGLContext， EGL_NO_CONTEXT表示不需要多个设备共享上下文
-    EGLContext context = eglCreateContext(display, eglConfig, EGL_NO_CONTEXT, ctxSpec);
+    //EGL_NO_CONTEXT表示不需要多个设备共享上下文
+    EGLContext context = eglCreateContext(display, eglConfig, EGL_NO_CONTEXT, ctxAttr);
     if (context == EGL_NO_CONTEXT) {
         LOGD("eglCreateContext failed");
         return;
     }
-
-    //将EGLContext和当前线程以及draw和read的EGLSurface关联，关联之后，当前线程就成为了OpenGL es的渲染线程
-    if (eglMakeCurrent(display, winSurface, winSurface, context) != EGL_TRUE) {
+    //将egl和opengl关联
+    //两个surface一个读一个写。第二个一般用来离线渲染？
+    if (EGL_TRUE != eglMakeCurrent(display, winSurface, winSurface, context)) {
         LOGD("eglMakeCurrent failed");
         return;
     }
 
-    ///  此处开始加载着色器程序
-    Shader shader(vertexSimpleShape, fragSimpleShape);
+    Shader shader(vertexSimpleShape,fragSimpleShape);
     shader.use();
 
 

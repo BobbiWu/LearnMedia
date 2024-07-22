@@ -16,6 +16,12 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
         private val TAG = "GlPlayer"
     }
 
+
+    fun setVideoType(){
+        setRenderer(this)
+        Log.d(TAG, "setVideoType")
+    }
+
     override fun run() {
         //绘制
         drawTriangle(holder.surface)
