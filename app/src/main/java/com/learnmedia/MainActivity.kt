@@ -3,19 +3,18 @@ package com.learnmedia
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import com.xoon.learnmedia.R
 import com.xoon.learnmedia.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
+    private val yuvPlayer by lazy<GlPlayer> {
+        findViewById(R.id.gl_player)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        binding.glPlayer.setVideoType()
-
+        setContentView(R.layout.activity_main)
+        yuvPlayer.setVideoType()
     }
 
     /**

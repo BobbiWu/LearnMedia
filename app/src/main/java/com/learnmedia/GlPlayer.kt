@@ -17,20 +17,21 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
     }
 
 
-    fun setVideoType(){
+    fun setVideoType() {
         setRenderer(this)
         Log.d(TAG, "setVideoType")
     }
 
     override fun run() {
         //绘制
-        drawTriangle(holder.surface)
+//        drawTriangle(holder.surface)
     }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         Log.d(TAG, "onSurfaceCreated")
+        drawTriangle(holder.surface)
 
-        Thread(this).start()
+//        Thread(this).start()
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {

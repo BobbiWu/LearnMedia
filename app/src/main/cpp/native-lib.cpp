@@ -89,28 +89,24 @@ Java_com_learnmedia_GlPlayer_drawTriangle(JNIEnv *env, jobject thiz, jobject sur
 
 
 
-    /// 开始将数据传入图形渲染管线
+
     static float triangleVer[] = {
-            0.8f, -0.8f, 0.0f,
-            -0.8f, -0.8f, 0.0f,
+            0.8f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.0f,
             0.0f, 0.8f, 0.0f,
     };
-    //顶点坐标传到变量“aPosition”中，所以先指定接收的变量名
-//    GLuint apos = static_cast<GLuint>(glGetAttribLocation(program, "aPosition"));//旧的传递方式
-    //通过layout传输数据，传给了着色器中layout为0的变量
-    //stride：步长，一个重要概念，表示前一个顶点属性的起始位置到下一个顶点属性的起始位置在数组中有多少字节。如果传0，则说明顶点属性数据是紧密挨着的
+
+//    GLuint apos = static_cast<GLuint>(glGetAttribLocation(program, "aPosition"));
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, triangleVer);
-    //打开layout为0的变量传输开关
     glEnableVertexAttribArray(0);
 
-
-    ///开始将图像渲染到屏幕
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    //绘制三个点
+
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
     //窗口显示，交换双缓冲区
     eglSwapBuffers(display, winSurface);
 
+    shader.release();
 
 }
