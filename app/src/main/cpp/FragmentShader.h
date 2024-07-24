@@ -43,4 +43,38 @@ static const char *fragSimpleShape =
         "            FragColor = vec4(vPosition.x ,vPosition.y ,vPosition.z,1.0);\n"
         "        }";
 
+
+//Uniform
+
+static const char *vertexSimpleUniform =
+        "        #version 300 es\n"
+        "        layout (location = 0) \n"
+        "        in vec4 aPosition;//输入的顶点坐标，会在程序指定将数据输入到该字段\n"
+        "\n"
+//        "        out\n"
+//        "        vec4 vTextColor;//输出的颜色\n"
+//
+//        "        out\n"
+//        "        vec4 vPosition;//输出的坐标\n"
+        "\n"
+        "        void main() {\n"
+        "            //直接把传入的坐标值作为传入渲染管线。gl_Position是OpenGL内置的\n"
+        "            gl_Position = aPosition;\n"
+        "        }";
+
+static const char *fragSimpleUniform =
+        "  #version 300 es\n"
+        "        precision\n"
+        "        mediump float;\n"
+        "\n"
+        "        uniform\n"
+        "        vec4 uTextColor;//输出的颜色\n"
+        "        out vec4 FragColor;\n"
+
+
+        "        void main() {\n"
+        "            //gl_FragColor是OpenGL内置的\n"
+        "            FragColor = uTextColor;\n"
+        "        }";
+
 #endif //LEARNMEDIA_FRAGMENTSHADER_H

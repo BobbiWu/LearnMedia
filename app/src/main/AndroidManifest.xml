@@ -13,7 +13,11 @@
         android:theme="@style/Theme.LearnMedia"
         tools:targetApi="31">
         <activity
-            android:name="com.learnmedia.MainActivity"
+            android:name="com.learnmedia.activity.MainActivity"
+            android:exported="true" />
+
+        <activity
+            android:name="com.learnmedia.activity.VideoTypeListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
