@@ -50,6 +50,7 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
             VideoTypeEnum.SOUL_FLY_OFF_YUV -> TODO()
             VideoTypeEnum.GAUSS_BLUR_YUV -> TODO()
             VideoTypeEnum.DRAW_TRIANGLE_UNIFORM -> drawTriangleUniform(holder.surface)
+            VideoTypeEnum.DRAW_TRIANGLE_WITH_COLOR_PASS -> drawTriangleWithColorPass(holder.surface)
             VideoTypeEnum.DRAW_TRIANGLE_VBO -> TODO()
             VideoTypeEnum.DRAW_TRIANGLE_EBO -> TODO()
             VideoTypeEnum.DRAW_TWO_TRIANGLE -> TODO()
@@ -130,6 +131,10 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
      */
     external fun drawTriangleUniform(surface: Any?)
 
+    /**
+     * 绘制顶点属性三角形
+     */
+    external fun drawTriangleWithColorPass(surface: Any?)
 
     companion object {
         private const val PATH = "/sdcard/video1_640_272.yuv"

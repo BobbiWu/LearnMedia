@@ -1,7 +1,7 @@
 package com.learnmedia
 
 /**
- * 视频类型的枚举
+ * 视频类型的枚举 ColorPass
  */
 enum class VideoTypeEnum {
     SIMPLE_YUV,
@@ -14,6 +14,7 @@ enum class VideoTypeEnum {
     GAUSS_BLUR_YUV,
     DRAW_TRIANGLE,
     DRAW_TRIANGLE_UNIFORM,
+    DRAW_TRIANGLE_WITH_COLOR_PASS,
     DRAW_TRIANGLE_VBO,
     DRAW_TRIANGLE_EBO,
     DRAW_TWO_TRIANGLE,

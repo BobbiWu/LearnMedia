@@ -13,5 +13,6 @@ object VideoTypeListData {
     val videoTypeList = mutableListOf<VideoTypeVo>().apply {
         add(VideoTypeVo(VideoTypeEnum.DRAW_TRIANGLE, "绘制三角形"))
         add(VideoTypeVo(VideoTypeEnum.DRAW_TRIANGLE_UNIFORM, "通过uniform绘制三角形"))
+        add(VideoTypeVo(VideoTypeEnum.DRAW_TRIANGLE_WITH_COLOR_PASS, "通过顶点属性绘制三角形"))
     }
 }
