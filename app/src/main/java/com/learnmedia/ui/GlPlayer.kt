@@ -16,7 +16,7 @@ import javax.microedition.khronos.opengles.GL10
 
 class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context, attrs), Runnable,
     SurfaceHolder.Callback, GLSurfaceView.Renderer {
-        private val TAG = "GlPlayer"
+    private val TAG = "GlPlayer"
     private var videoType = VideoTypeEnum.DRAW_TRIANGLE
 
     fun setVideoType(videoType: VideoTypeEnum) {
@@ -53,7 +53,7 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
             VideoTypeEnum.DRAW_TRIANGLE_UNIFORM -> drawTriangleUniform(holder.surface)
             VideoTypeEnum.DRAW_TRIANGLE_WITH_COLOR_PASS -> drawTriangleWithColorPass(holder.surface)
             VideoTypeEnum.DRAW_TRIANGLE_VBO -> drawTriangleWithBufferObj(holder.surface)
-            VideoTypeEnum.DRAW_TRIANGLE_EBO -> TODO()
+            VideoTypeEnum.DRAW_TRIANGLE_EBO -> drawTriangleWithEBO(holder.surface)
             VideoTypeEnum.DRAW_TWO_TRIANGLE -> TODO()
             VideoTypeEnum.DRAW_LINE -> TODO()
             VideoTypeEnum.DRAW_TEXTURE_MAX -> TODO()
@@ -139,6 +139,11 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
      * 使用缓冲对象绘制三角形
      */
     external fun drawTriangleWithBufferObj(surface: Any?)
+
+    /**
+     * 使用EBO绘制三角形
+     */
+    external fun drawTriangleWithEBO(surface: Any?)
 
     companion object {
         private const val PATH = "/sdcard/video1_640_272.yuv"

@@ -15,5 +15,6 @@ object VideoTypeListData {
         add(VideoTypeVo(VideoTypeEnum.DRAW_TRIANGLE_UNIFORM, "通过uniform绘制三角形"))
         add(VideoTypeVo(VideoTypeEnum.DRAW_TRIANGLE_WITH_COLOR_PASS, "通过顶点属性绘制三角形"))
         add(VideoTypeVo(VideoTypeEnum.DRAW_TRIANGLE_VBO, "使用缓冲对象绘制三角形"))
+        add(VideoTypeVo(VideoTypeEnum.DRAW_TRIANGLE_EBO, "使用缓EBO绘制三角形"))
     }
 }
