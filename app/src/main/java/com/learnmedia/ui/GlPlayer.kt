@@ -16,15 +16,16 @@ import javax.microedition.khronos.opengles.GL10
 
 class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context, attrs), Runnable,
     SurfaceHolder.Callback, GLSurfaceView.Renderer {
+        private val TAG = "GlPlayer"
     private var videoType = VideoTypeEnum.DRAW_TRIANGLE
 
     fun setVideoType(videoType: VideoTypeEnum) {
         this.videoType = videoType
-        Log.d("YuvPlayer", "videoType:$videoType")
+        Log.d(TAG, "videoType:$videoType")
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
-        Log.d("YuvPlayer", "surfaceCreated")
+        Log.d(TAG, "surfaceCreated")
         Thread(this).start()
     }
 
@@ -37,7 +38,7 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
     }
 
     override fun run() {
-        Log.d("YuvPlayer", "run")
+        Log.d(TAG, "run")
 
         when (videoType) {
             VideoTypeEnum.DRAW_TRIANGLE -> drawTriangle(holder.surface)
@@ -51,7 +52,7 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
             VideoTypeEnum.GAUSS_BLUR_YUV -> TODO()
             VideoTypeEnum.DRAW_TRIANGLE_UNIFORM -> drawTriangleUniform(holder.surface)
             VideoTypeEnum.DRAW_TRIANGLE_WITH_COLOR_PASS -> drawTriangleWithColorPass(holder.surface)
-            VideoTypeEnum.DRAW_TRIANGLE_VBO -> TODO()
+            VideoTypeEnum.DRAW_TRIANGLE_VBO -> drawTriangleWithBufferObj(holder.surface)
             VideoTypeEnum.DRAW_TRIANGLE_EBO -> TODO()
             VideoTypeEnum.DRAW_TWO_TRIANGLE -> TODO()
             VideoTypeEnum.DRAW_LINE -> TODO()
@@ -61,7 +62,7 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
             VideoTypeEnum.DRAW_GRADIENT_COLOR_CUBE_TEXTURE -> TODO()
             VideoTypeEnum.DRAW_CUBES_MOVE_CAMERA -> TODO()
         }
-        Log.d("YuvPlayer", "loadYuv")
+        Log.d(TAG, "loadYuv")
     }
 
 
@@ -108,8 +109,6 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
 
     init {
         setRenderer(this)
-
-        Log.d("YuvPlayer", "YuvPlayer")
     }
 
     override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
@@ -135,6 +134,11 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
      * 绘制顶点属性三角形
      */
     external fun drawTriangleWithColorPass(surface: Any?)
+
+    /**
+     * 使用缓冲对象绘制三角形
+     */
+    external fun drawTriangleWithBufferObj(surface: Any?)
 
     companion object {
         private const val PATH = "/sdcard/video1_640_272.yuv"
