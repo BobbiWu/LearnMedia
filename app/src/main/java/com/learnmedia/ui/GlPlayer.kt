@@ -145,6 +145,11 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
      */
     external fun drawTriangleWithEBO(surface: Any?)
 
+    /**
+     * 绘制纹理
+     */
+    external fun drawTexture(bitmap: Bitmap,surface: Any?)
+
     companion object {
         private const val PATH = "/sdcard/video1_640_272.yuv"
     }

@@ -41,4 +41,5 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         # EGL依赖库
         EGL
         android
+        jnigraphics # 操作Bitmap的库
         log)
