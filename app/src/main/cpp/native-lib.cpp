@@ -495,7 +495,7 @@ Java_com_learnmedia_ui_GlPlayer_drawTriangleWithEBO(JNIEnv *env, jobject thiz, j
         return;
     }
 
-    Shader shader(vertexSimpleShapeWithEBO,fragSimpleShapeEBO);
+    Shader shader(vertexSimpleShapeWithEBO, fragSimpleShapeEBO);
     int program = shader.use();
 
 
@@ -535,8 +535,8 @@ Java_com_learnmedia_ui_GlPlayer_drawTriangleWithEBO(JNIEnv *env, jobject thiz, j
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_learnmedia_ui_GlPlayer_drawTexture(JNIEnv *env, jobject thiz, jobject bitmap,
+                                            jobject bitmapTwo,
                                             jobject surface) {
-
     //BITMAP_INFO_LOGD("drawTexture width:%d,height:%d", width, height);
     //1.获取原始窗口
     //be sure to use ANativeWindow_release()
@@ -596,7 +596,7 @@ Java_com_learnmedia_ui_GlPlayer_drawTexture(JNIEnv *env, jobject thiz, jobject b
         return;
     }
 
-    Shader shader(vertexSimpleTexture,fragSimpleTexture);
+    Shader shader(vertexSimpleTexture, fragSimpleTexture);
     int program = shader.use();
 
     float vertices[] = {
@@ -606,5 +606,144 @@ Java_com_learnmedia_ui_GlPlayer_drawTexture(JNIEnv *env, jobject thiz, jobject b
             -0.8f, -0.4f, 0.0f, 0.0f, 0.0f, // bottom left
             -0.8f, 0.4f, 0.0f, 0.0f, 1.0f  // top left
     };
+    unsigned int indices[] = {
+            0, 1, 3, // first triangle
+            1, 2, 3  // second triangle
+    };
+    unsigned int VBO, VAO, EBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
 
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    LOGD("glBufferData GL_ELEMENT_ARRAY_BUFFER");
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    glEnableVertexAttribArray(0);
+    // texture coord attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                          (void *) (3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    LOGD("glEnableVertexAttribArray(1)");
+
+
+    AndroidBitmapInfo bmpInfo;
+    void *bmpPixels;
+
+    if (AndroidBitmap_getInfo(env, bitmap, &bmpInfo) < 0) {
+        LOGD("AndroidBitmap_getInfo() failed ! ");
+        return;
+    }
+
+    AndroidBitmap_lockPixels(env, bitmap, &bmpPixels);
+
+    LOGD("bitmap width:%d,height:%d", bmpInfo.width, bmpInfo.height);
+
+
+    AndroidBitmapInfo bmpInfoTwo;
+    void *bmpPixelsTwo;
+
+    if (AndroidBitmap_getInfo(env, bitmapTwo, &bmpInfoTwo) < 0) {
+        LOGD("AndroidBitmapTwo_getInfo() failed ! ");
+        return;
+    }
+
+    AndroidBitmap_lockPixels(env, bitmap, &bmpPixels);
+
+    LOGD("bitmap width:%d,height:%d", bmpInfo.width, bmpInfo.height);
+
+    if (bmpPixels == nullptr || bitmapTwo == nullptr) {
+        return;
+    }
+
+
+    // load and create a texture
+    // -------------------------
+    unsigned int texture1, texture2;
+    //-------------------- texture1的配置start ------------------------------
+    glGenTextures(1, &texture1);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+    // set the texture wrapping parameters（配置纹理环绕）
+    //横坐标环绕配置
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+                    GL_REPEAT);    // set texture wrapping to GL_REPEAT (default wrapping method)
+    //纵坐标环绕配置
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // set texture filtering parameters（配置纹理过滤）
+    //纹理分辨率大于图元分辨率，即纹理需要被缩小的过滤配置
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //纹理分辨率小于图元分辨率，即纹理需要被放大的过滤配置
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image, create texture and generate mipmaps
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bmpInfo.width, bmpInfo.height, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, bmpPixels);
+    AndroidBitmap_unlockPixels(env, bitmap);
+    //-------------------- texture1的配置end ------------------------------
+
+    //-------------------- texture2的配置start ------------------------------
+
+    glGenTextures(1, &texture2);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    // set the texture wrapping parameters（配置纹理环绕）
+    //横坐标环绕配置
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+                    GL_REPEAT);    // set texture wrapping to GL_REPEAT (default wrapping method)
+    //纵坐标环绕配置
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // set texture filtering parameters（配置纹理过滤）
+    //纹理分辨率大于图元分辨率，即纹理需要被缩小的过滤配置
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //纹理分辨率小于图元分辨率，即纹理需要被放大的过滤配置
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load image, create texture and generate mipmaps
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bmpInfoTwo.width, bmpInfoTwo.height, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, bmpPixelsTwo);
+    AndroidBitmap_unlockPixels(env, bitmapTwo);
+
+    //-------------------- texture2的配置end ------------------------------
+
+
+    //对着色器中的纹理单元变量进行赋值
+    glUniform1i(glGetUniformLocation(program, "ourTexture"), 0);
+    glUniform1i(glGetUniformLocation(program, "ourTexture1"), 1);
+
+    //将纹理单元和纹理对象进行绑定
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+
+
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+//    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    //    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+
+    //窗口显示，交换双缓冲区
+    eglSwapBuffers(display, winSurface);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+    //释放着色器程序对象
+    shader.release();
 }

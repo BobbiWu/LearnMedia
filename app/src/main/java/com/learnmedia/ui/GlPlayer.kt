@@ -1,16 +1,15 @@
 package com.learnmedia.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.util.Log
-import android.view.MotionEvent
-import android.view.Surface
 import android.view.SurfaceHolder
 import com.learnmedia.VideoTypeEnum
+import com.xoon.learnmedia.R
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -37,6 +36,7 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
         surfaceHeight = h
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun run() {
         Log.d(TAG, "run")
 
@@ -56,7 +56,20 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
             VideoTypeEnum.DRAW_TRIANGLE_EBO -> drawTriangleWithEBO(holder.surface)
             VideoTypeEnum.DRAW_TWO_TRIANGLE -> TODO()
             VideoTypeEnum.DRAW_LINE -> TODO()
-            VideoTypeEnum.DRAW_TEXTURE_MAX -> TODO()
+            VideoTypeEnum.DRAW_TEXTURE_MAX -> {
+                val bitmap =
+                    (resources.getDrawable(R.drawable.liyingai) as BitmapDrawable).bitmap
+                val bitmapTwo =
+                    (resources.getDrawable(R.drawable.shiyuanmeili2) as BitmapDrawable).bitmap
+                drawTexture(bitmap,bitmapTwo, holder.surface)
+//                val bpLiyingai1 =
+//                    (resources.getDrawable(R.drawable.liyingai) as BitmapDrawable).bitmap
+//                val bpShiyuanmeili1 =
+//                    (resources.getDrawable(R.drawable.shiyuanmeili2) as BitmapDrawable).bitmap
+//                drawTexture(bpLiyingai1, bpShiyuanmeili1, holder.surface)
+//                break
+            }
+
             VideoTypeEnum.DRAW_3D_TEXTURE -> TODO()
             VideoTypeEnum.DRAW_3D_CUBE_TEXTURE -> TODO()
             VideoTypeEnum.DRAW_GRADIENT_COLOR_CUBE_TEXTURE -> TODO()
@@ -148,7 +161,7 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
     /**
      * 绘制纹理
      */
-    external fun drawTexture(bitmap: Bitmap,surface: Any?)
+    external fun drawTexture(bitmap: Bitmap, bitmapTwo: Bitmap, surface: Any?)
 
     companion object {
         private const val PATH = "/sdcard/video1_640_272.yuv"
