@@ -596,7 +596,7 @@ Java_com_learnmedia_ui_GlPlayer_drawTexture(JNIEnv *env, jobject thiz, jobject b
         return;
     }
 
-    Shader shader(vertexSimpleTexture, fragSimpleTexture);
+    Shader shader(vertexSimpleTexture,fragSimpleTexture);
     int program = shader.use();
 
     float vertices[] = {
@@ -648,20 +648,19 @@ Java_com_learnmedia_ui_GlPlayer_drawTexture(JNIEnv *env, jobject thiz, jobject b
 
     LOGD("bitmap width:%d,height:%d", bmpInfo.width, bmpInfo.height);
 
+    AndroidBitmapInfo bmpInfo1;
+    void *bmpPixels1;
 
-    AndroidBitmapInfo bmpInfoTwo;
-    void *bmpPixelsTwo;
-
-    if (AndroidBitmap_getInfo(env, bitmapTwo, &bmpInfoTwo) < 0) {
-        LOGD("AndroidBitmapTwo_getInfo() failed ! ");
+    if (AndroidBitmap_getInfo(env, bitmapTwo, &bmpInfo1) < 0) {
+        LOGD("AndroidBitmap_getInfo() failed ! ");
         return;
     }
 
-    AndroidBitmap_lockPixels(env, bitmap, &bmpPixels);
+    AndroidBitmap_lockPixels(env, bitmapTwo, &bmpPixels1);
 
-    LOGD("bitmap width:%d,height:%d", bmpInfo.width, bmpInfo.height);
+    LOGD("bitmap width:%d,height:%d", bmpInfo1.width, bmpInfo1.height);
 
-    if (bmpPixels == nullptr || bitmapTwo == nullptr) {
+    if (bmpPixels == nullptr || bmpPixels1 == nullptr) {
         return;
     }
 
@@ -690,29 +689,23 @@ Java_com_learnmedia_ui_GlPlayer_drawTexture(JNIEnv *env, jobject thiz, jobject b
     AndroidBitmap_unlockPixels(env, bitmap);
     //-------------------- texture1的配置end ------------------------------
 
-    //-------------------- texture2的配置start ------------------------------
 
+    //-------------------- texture2的配置start ------------------------------
     glGenTextures(1, &texture2);
     glBindTexture(GL_TEXTURE_2D, texture2);
-    // set the texture wrapping parameters（配置纹理环绕）
-    //横坐标环绕配置
+    // set the texture wrapping parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
                     GL_REPEAT);    // set texture wrapping to GL_REPEAT (default wrapping method)
-    //纵坐标环绕配置
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters（配置纹理过滤）
-    //纹理分辨率大于图元分辨率，即纹理需要被缩小的过滤配置
+    // set texture filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    //纹理分辨率小于图元分辨率，即纹理需要被放大的过滤配置
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bmpInfoTwo.width, bmpInfoTwo.height, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, bmpPixelsTwo);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bmpInfo1.width, bmpInfo1.height, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, bmpPixels1);
     AndroidBitmap_unlockPixels(env, bitmapTwo);
 
     //-------------------- texture2的配置end ------------------------------
-
 
     //对着色器中的纹理单元变量进行赋值
     glUniform1i(glGetUniformLocation(program, "ourTexture"), 0);
@@ -721,10 +714,8 @@ Java_com_learnmedia_ui_GlPlayer_drawTexture(JNIEnv *env, jobject thiz, jobject b
     //将纹理单元和纹理对象进行绑定
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture1);
-
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
-
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
