@@ -2,6 +2,7 @@ package com.learnmedia.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.opengl.GLSurfaceView
@@ -42,7 +43,11 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
 
         when (videoType) {
             VideoTypeEnum.DRAW_TRIANGLE -> drawTriangle(holder.surface)
-            VideoTypeEnum.SIMPLE_YUV -> TODO()
+            VideoTypeEnum.SIMPLE_YUV -> {
+                val assetManager = context?.assets
+                loadYue(holder.surface, assetManager)
+            }
+
             VideoTypeEnum.NO_FILTER_YUV -> TODO()
             VideoTypeEnum.GRAY_FILTER_YUV -> TODO()
             VideoTypeEnum.OPPO_FILTER_YUV -> TODO()
@@ -61,7 +66,7 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
                     (resources.getDrawable(R.drawable.liyingai) as BitmapDrawable).bitmap
                 val bitmapTwo =
                     (resources.getDrawable(R.drawable.shiyuanmeili2) as BitmapDrawable).bitmap
-                drawTexture(bitmap,bitmapTwo, holder.surface)
+                drawTexture(bitmap, bitmapTwo, holder.surface)
 //                val bpLiyingai1 =
 //                    (resources.getDrawable(R.drawable.liyingai) as BitmapDrawable).bitmap
 //                val bpShiyuanmeili1 =
@@ -162,6 +167,12 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
      * 绘制纹理
      */
     external fun drawTexture(bitmap: Bitmap, bitmapTwo: Bitmap, surface: Any?)
+
+    /**
+     * 加载 yuv
+     */
+    external fun loadYue(surface: Any?, assetManager: AssetManager?)
+
 
     companion object {
         private const val PATH = "/sdcard/video1_640_272.yuv"
