@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.util.Log
+import android.view.Surface
 import android.view.SurfaceHolder
 import com.learnmedia.VideoTypeEnum
 import com.xoon.learnmedia.R
@@ -49,7 +50,10 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
             }
 
             VideoTypeEnum.NO_FILTER_YUV -> TODO()
-            VideoTypeEnum.GRAY_FILTER_YUV -> TODO()
+            VideoTypeEnum.GRAY_FILTER_YUV ->{
+                val assetManager = context?.assets
+                loadGradFilterYue(holder.surface,FilterType.GRAY,assetManager)
+            }
             VideoTypeEnum.OPPO_FILTER_YUV -> TODO()
             VideoTypeEnum.DIVIDE_TO_2_YUV -> TODO()
             VideoTypeEnum.DIVIDE_TO_4_YUV -> TODO()
@@ -174,7 +178,14 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
     external fun loadYue(surface: Any?, assetManager: AssetManager?)
 
 
+    /**
+     * 加载灰色滤镜 YUV FILTER
+     */
+
+    external fun loadGradFilterYue(surface: Surface?, type: Int, assetManager: AssetManager?)
+
     companion object {
         private const val PATH = "/sdcard/video1_640_272.yuv"
     }
+
 }

@@ -231,4 +231,35 @@ static const char *vertexShaderWithMatrix =
         "        }";
 
 
+//灰色滤镜
+static const char *fragYUV420PGray =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "//纹理坐标\n"
+        "in vec2 vTextCoord;\n"
+        "//输入的yuv三个纹理\n"
+        "uniform sampler2D yTexture;//采样器\n"
+        "uniform sampler2D uTexture;//采样器\n"
+        "uniform sampler2D vTexture;//采样器\n"
+        "out vec4 FragColor;\n"
+        "void main() {\n"
+        "//采样到的yuv向量数据\n"
+        "   vec3 yuv;\n"
+        "//yuv转化得到的rgb向量数据\n"
+        "    vec3 rgb;\n"
+        "    //分别取yuv各个分量的采样纹理\n"
+        "    yuv.x = texture(yTexture, vTextCoord).r;\n"
+        "//直接将uv置为0.0即可（0.5-0.5)\n"
+        "   yuv.y = 0.0;\n"
+        "    yuv.z = 0.0;\n"
+        "   rgb = mat3(\n"
+        "            1.0, 1.0, 1.0,\n"
+        "            0.0, -0.183, 1.816,\n"
+        "            1.540, -0.459, 0.0\n"
+        "    ) * yuv;\n"
+        "    //gl_FragColor是OpenGL内置的\n"
+        "    FragColor = vec4(rgb, 1.0);\n"
+        " }";
+
+
 #endif //LEARNMEDIA_FRAGMENTSHADER_H
