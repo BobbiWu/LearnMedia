@@ -50,10 +50,16 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
             }
 
             VideoTypeEnum.NO_FILTER_YUV -> TODO()
-            VideoTypeEnum.GRAY_FILTER_YUV ->{
+            VideoTypeEnum.GRAY_FILTER_YUV -> {
                 val assetManager = context?.assets
-                loadGradFilterYue(holder.surface,FilterType.GRAY,assetManager)
+                loadGradFilterYue(holder.surface, FilterType.GRAY, assetManager)
             }
+
+            VideoTypeEnum.OPPO_GRAY_FILTER_YUV -> {
+                val assetManager = context?.assets
+                loadGradFilterYue(holder.surface, FilterType.OPPO_GRAY, assetManager)
+            }
+
             VideoTypeEnum.OPPO_FILTER_YUV -> TODO()
             VideoTypeEnum.DIVIDE_TO_2_YUV -> TODO()
             VideoTypeEnum.DIVIDE_TO_4_YUV -> TODO()
@@ -119,6 +125,7 @@ class GlPlayer(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context,
              * 四分镜
              */
             const val DIVIDE_TO_4: Int = 5
+
         }
     }
 

@@ -262,4 +262,43 @@ static const char *fragYUV420PGray =
         " }";
 
 
+//灰色，反色交叉滤镜
+static const char *fragYUV420POppoColorAndGrayColor =
+        "#version 300 es\n"
+
+        "precision mediump float;\n"
+        "//纹理坐标\n"
+        "in vec2 vTextCoord;\n"
+        "//输入的yuv三个纹理\n"
+        "uniform sampler2D yTexture;//采样器\n"
+        "uniform sampler2D uTexture;//采样器\n"
+        "uniform sampler2D vTexture;//采样器\n"
+        "out vec4 FragColor;\n"
+        // "uniform float time;"
+        "void main() {\n"
+        "//采样到的yuv向量数据\n"
+        "   vec3 yuv;\n"
+        "//yuv转化得到的rgb向量数据\n"
+        "    vec3 rgb;\n"
+        "    //分别取yuv各个分量的采样纹理（r表示？）\n"
+        "    yuv.x = texture(yTexture, vTextCoord).r;\n"
+        "   yuv.y = texture(uTexture, vTextCoord).g - 0.5;\n"
+        "    yuv.z = texture(vTexture, vTextCoord).b - 0.5;\n"
+        "   rgb = mat3(\n"
+        "            1.0, 1.0, 1.0,\n"
+        "            0.0, -0.183, 1.816,\n"
+        "            1.540, -0.459, 0.0\n"
+        "    ) * yuv;\n"
+        "    //gl_FragColor是OpenGL内置的\n"
+        "                if (vTextCoord.x < 0.5 && vTextCoord.y < 0.5) {\n"
+        "                    //反色滤镜\n"
+        "                    FragColor = vec4(vec3(1.0 - rgb.r, 1.0 - rgb.g, 1.0 - rgb.b), 1.0);\n"
+        "                } else if (vTextCoord.x > 0.5 && vTextCoord.y > 0.5) {\n"
+        "                    float gray = rgb.r * 0.2125 + rgb.g * 0.7154 + rgb.b * 0.0721;\n"
+        "                    FragColor = vec4(gray, gray, gray, 1.0);\n"
+        "                } else {\n"
+        "                    FragColor = vec4(rgb, 1.0);\n"
+        "\n"
+        "                }\n"
+        " }";
 #endif //LEARNMEDIA_FRAGMENTSHADER_H

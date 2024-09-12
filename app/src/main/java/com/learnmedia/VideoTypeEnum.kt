@@ -8,6 +8,7 @@ enum class VideoTypeEnum {
     NO_FILTER_YUV,
     GRAY_FILTER_YUV,
     OPPO_FILTER_YUV,
+    OPPO_GRAY_FILTER_YUV,
     DIVIDE_TO_2_YUV,
     DIVIDE_TO_4_YUV,
     SOUL_FLY_OFF_YUV,

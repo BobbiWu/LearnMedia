@@ -18,7 +18,7 @@ object VideoTypeListData {
         add(VideoTypeVo(VideoTypeEnum.DRAW_TRIANGLE_EBO, "使用缓EBO绘制三角形"))
         add(VideoTypeVo(VideoTypeEnum.DRAW_TEXTURE_MAX, "纹理绘制"))
         add(VideoTypeVo(VideoTypeEnum.SIMPLE_YUV, "基础YUV视频"))
-        add(VideoTypeVo(VideoTypeEnum.GRAY_FILTER_YUV, "灰色滤镜YUV视频"))
+        add(VideoTypeVo(VideoTypeEnum.OPPO_GRAY_FILTER_YUV, "反色灰色滤镜YUV视频"))
 
     }
 }

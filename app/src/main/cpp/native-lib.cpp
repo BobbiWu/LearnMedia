@@ -22,12 +22,12 @@ using namespace glm;
 enum enum_filter_type {
     //无滤镜效果
     filter_type_none = 0,
+    //反色灰度
+    filter_type_oppo_gray = 2,
     //灰度图
     filter_type_gray = 3,
     //反色
     filter_type_oppo,
-    //反色灰度
-    filter_type_oppo_gray,
     //2分屏
     filter_type_divide_2,
     //4分屏
@@ -1153,6 +1153,10 @@ Java_com_learnmedia_ui_GlPlayer_loadGradFilterYue(JNIEnv *env, jobject thiz, job
         case filter_type_gray:
             vertexShaderString = vertexShaderWithMatrix;
             fragShaderString = fragYUV420PGray;
+            break;
+        case filter_type_oppo_gray:
+            vertexShaderString = vertexShaderWithMatrix;
+            fragShaderString = fragYUV420POppoColorAndGrayColor;
             break;
         default:
             vertexShaderString = vertexShaderWithMatrix;
